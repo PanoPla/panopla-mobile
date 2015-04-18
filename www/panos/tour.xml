@@ -1,0 +1,353 @@
+<krpano version="1.17.3" title="Virtual Tour" onstart="startup();">
+
+	<include url="skin/vtourskin.xml" />
+
+	<!-- set skin settings: bingmaps? gyro? thumbnail controlling? tooltips? -->
+	<skin_settings bingmaps="false"
+	               bingmaps_key=""
+	               bingmaps_zoombuttons="false"
+	               gyro="true"
+	               thumbs_width="120" thumbs_height="80" thumbs_padding="10" thumbs_crop="0|40|240|160"
+	               thumbs_opened="false"
+	               thumbs_text="false"
+	               thumbs_dragging="true"
+	               thumbs_onhoverscrolling="false"
+	               thumbs_scrollbuttons="false"
+	               thumbs_scrollindicator="false"
+	               thumbs_loop="false"
+	               tooltips_thumbs="false"
+	               tooltips_hotspots="false"
+	               tooltips_mapspots="false"
+	               controlbar_offset="20"
+	               />
+
+	<!-- set optional skin logo url -->
+	<layer name="skin_logo" url="" scale="0.25" opened_onclick="openurl('...',_blank);" />
+
+
+	<action name="startup">
+		if(startscene === null, copy(startscene,scene[0].name));
+		loadscene(get(startscene), null, MERGE);
+	</action>
+	
+	<events name="evntChange" onviewchanged="showHotSpots()" keep="true"/>
+	<action name="showHotSpots">
+		set(i,0);
+		loop_hotspots(0);
+	</action>
+
+	<action name="loop_hotspots">
+		test_hotspot_in_range(get(hotspot[%1].name));
+		inc(i);
+		if (i LT hotspot.count, loop_hotspots( get(i) ) );
+	</action>
+
+	<action name="test_hotspot_in_range">
+		sub(hdistance, view.hlookat, hotspot[%1].ath);
+		mod(hdistance,hdistance,360);
+		if(hdistance GT 180, sub(hdistance,hdistance,360));
+		if(hdistance LT -180, add(hdistance,hdistance,360));
+		sub(vdistance, view.vlookat, hotspot[%1].atv);
+		mod(vdistance,vdistance,360);
+		if(vdistance GT 180, sub(vdistance,vdistance,360));
+		if(vdistance LT -180, add(vdistance,vdistance,360));
+		if(hdistance LT 0, mul(hdistance,hdistance,-1));
+		if(vdistance LT 0, mul(vdistance,vdistance,-1));
+		if(hdistance GT 40, set(hdistance,40) );
+		if(vdistance GT 40, set(vdistance,40) );
+		div(hdistance,hdistance,40);
+		div(vdistance,vdistance,40);
+		add(distance2,hdistance,vdistance);
+		sub(hotspot[%1].alpha,1.0,distance2);
+		if(hotspot[%1].alpha LT 0.0, set(hotspot[%1].alpha,0.0) );
+	</action>
+
+	<action name="launchMenu">
+	      js(menuLaunch());
+        </action>
+
+	<action name="launchPopup">
+		js(leaderLaunch());
+	</action>
+	
+	<!-- Click event for hotspots -->
+	<action name="launchClick">
+		js(leaderLaunch());
+	</action>
+	
+	<layer name="leftBtn"
+                 type="image"
+                 devices="all"
+                  visible="true"
+                  enabled="true"
+                  handcursor="true"
+                  maskchildren="false"
+                  scalechildren="false"
+                 url="missions_icon.png"
+                scale="1.3"
+                alpha=".5"
+                align="left"
+		keep="true"
+		ondown="launchMenu();"
+		/>
+	
+	<layer name="rightBtn"
+                 type="image"
+                 devices="all"
+                  visible="true"
+                  enabled="true"
+                  handcursor="true"
+                  maskchildren="false"
+                  scalechildren="false"
+                 url="leaderboard_icon.png"
+                scale="1.3"
+                alpha=".5"
+                align="right"
+		keep="true"
+		ondown="launchPopup();"
+		/>
+
+	<events onclick="screentosphere(mouse.x, mouse.y, m_ath, m_atv); trace('clicked at ath=',m_ath,' atv=',m_atv);"
+	        />
+	
+	<scene name="scene_hairstyling" title="hairstyling" onstart="" thumburl="panos/hairstyling4.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/hairstyling4.tiles/preview.jpg" />
+
+		<image type="CUBE" multires="true" tilesize="512" progressive="false">
+			<level tiledimagewidth="7950" tiledimageheight="7950">
+				<cube url="panos/hairstyling4.tiles/%s/l5/%v/l5_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="3976" tiledimageheight="3976">
+				<cube url="panos/hairstyling4.tiles/%s/l4/%v/l4_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="2048" tiledimageheight="2048">
+				<cube url="panos/hairstyling4.tiles/%s/l3/%v/l3_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="1024" tiledimageheight="1024">
+				<cube url="panos/hairstyling4.tiles/%s/l2/%v/l2_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="512" tiledimageheight="512">
+				<cube url="panos/hairstyling4.tiles/%s/l1/%v/l1_%s_%v_%h.jpg" />
+			</level>
+			<mobile>
+				<cube url="panos/hairstyling4.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>
+
+		<!-- place your scene hotspots here -->
+		
+		<hotspot name="cabinet" url="infor.png" 
+	         ath="83.582938" atv="-0.919463" width="128" height="128" scale="0.224416"
+                 onclick=""
+		 visible="true"
+		 
+	         />
+
+		<hotspot name="hairblower" url="infor.png" 
+			 ath="25.289965" atv="9.209618" width="128" height="128" scale="0.258122"
+			 onclick=""
+			 />
+		
+		<hotspot name="speaker" alpha="0.0" alturl="infor.png" width="128" height="128" scale="0.258122"
+			 ath="70.074512" atv="-8.699516" onclick="">
+			<point ath="70.040122" atv="-11.05863" />
+			<point ath="72.227365" atv="-11.169076" />
+			<point ath="72.391089" atv="-8.791814" />
+			<point ath="70.074512" atv="-8.699516" />
+		</hotspot>
+		
+		<hotspot name="clock" visible="true" onclick=""
+		ath="-54.195532" atv="-10.540719" width="128" height="128" scale="0.524416" alpha="0.0" alturl="infor.png">
+			<point ath="-54.195532" atv="-10.540719" />
+			<point ath="-53.738179" atv="-10.436311" />
+			<point ath="-53.357757" atv="-10.043027" />
+			<point ath="-53.15444" atv="-9.389667" />
+			<point ath="-53.218232" atv="-8.549609" />
+			<point ath="-53.55896" atv="-7.796576" />
+			<point ath="-54.072497" atv="-7.39124" />
+			<point ath="-54.512676" atv="-7.407813" />
+			<point ath="-54.819151" atv="-7.712933" />
+			<point ath="-55.053208" atv="-8.193532" />
+			<point ath="-55.140571" atv="-8.890025" />
+			<point ath="-55.051501" atv="-9.58639" />
+			<point ath="-54.697599" atv="-10.237804" />
+		</hotspot>
+		
+		<hotspot name="braid" visible="true" onclick=""
+		ath="110.987133" atv="7.534046" width="128" height="128" scale="0.524416" alpha="0.0" alturl="infor.png">
+			<point ath="110.987133" atv="7.534046" />
+			<point ath="110.110395" atv="7.754318" />
+			<point ath="109.761867" atv="8.637931" />
+			<point ath="109.351394" atv="9.508399" />
+			<point ath="108.599887" atv="9.740167" />
+			<point ath="108.362586" atv="10.00099" />
+			<point ath="108.390074" atv="10.697505" />
+			<point ath="108.18316" atv="10.871989" />
+			<point ath="108.031421" atv="11.597313" />
+			<point ath="107.496033" atv="11.958689" />
+			<point ath="107.097283" atv="11.693809" />
+			<point ath="106.937333" atv="11.314949" />
+			<point ath="107.103037" atv="10.939231" />
+			<point ath="106.909836" atv="9.195932" />
+			<point ath="107.094692" atv="8.067584" />
+			<point ath="107.493786" atv="7.419673" />
+			<point ath="108.766771" atv="6.599373" />
+			<point ath="109.436123" atv="6.397763" />
+			<point ath="110.311228" atv="6.613406" />
+			<point ath="110.837026" atv="6.986056" />
+		</hotspot>
+		
+		<hotspot name="fe_1" visible="true" onclick=""
+		ath="169.376669" atv="5.281997" width="128" height="128" scale="0.524416" alpha="0.0" alturl="infor.png">
+			<point ath="169.376669" atv="5.281997" />
+			<point ath="169.904205" atv="5.443164" />
+			<point ath="171.152536" atv="5.315683" />
+			<point ath="171.390877" atv="4.971234" />
+			<point ath="171.237926" atv="2.487761" />
+			<point ath="171.554993" atv="2.515802" />
+			<point ath="171.426269" atv="0.961518" />
+			<point ath="171.82286" atv="0.277214" />
+			<point ath="171.535465" atv="-0.874156" />
+			<point ath="170.905431" atv="-1.110316" />
+			<point ath="170.46304" atv="-1.813843" />
+			<point ath="169.884941" atv="-1.760959" />
+			<point ath="169.778022" atv="-1.318013" />
+			<point ath="169.463177" atv="-1.238111" />
+			<point ath="169.435014" atv="-0.872855" />
+			<point ath="168.752368" atv="-0.61251" />
+			<point ath="168.588985" atv="0.330178" />
+			<point ath="168.058845" atv="4.823951" />
+			<point ath="169.112473" atv="4.990158" />
+		</hotspot>
+		
+		<hotspot name="guy" visible="true" onclick=""
+		ath="96.353743" atv="0.486812" width="128" height="128" scale="0.524416" alpha="0.0" alturl="infor.png">
+			<point ath="96.353743" atv="0.486812" />
+			<point ath="96.499131" atv="0.122907" />
+			<point ath="96.586346" atv="-0.153033" />
+			<point ath="96.65901" atv="-0.413648" />
+			<point ath="96.586441" atv="-0.965061" />
+			<point ath="96.39844" atv="-1.25579" />
+			<point ath="95.977429" atv="-1.328166" />
+			<point ath="95.642821" atv="-1.28455" />
+			<point ath="95.454017" atv="-1.096017" />
+			<point ath="95.395465" atv="-0.413523" />
+			<point ath="95.308293" atv="-0.326433" />
+			<point ath="95.351628" atv="-0.036846" />
+			<point ath="95.598269" atv="0.326936" />
+			<point ath="95.83134" atv="0.500557" />
+			<point ath="96.078346" atv="0.530374" />
+		</hotspot>
+		
+		
+		
+		<hotspot name="solution" visible="true" onclick="launchClick();"
+		ath="39.948877" atv="5.078163" width="128" height="128" scale="0.524416" alpha="0.0" alturl="infor.png">
+			<point ath="39.948877" atv="5.078163" />
+			<point ath="40.15265" atv="5.078166" />
+			<point ath="40.181841" atv="5.309589" />
+			<point ath="40.590074" atv="5.59955" />
+			<point ath="40.551032" atv="8.458312" />
+			<point ath="40.639719" atv="8.777936" />
+			<point ath="40.315518" atv="8.908386" />
+			<point ath="39.903548" atv="8.894633" />
+			<point ath="39.491651" atv="8.864439" />
+			<point ath="39.301316" atv="8.791432" />
+			<point ath="39.31703" atv="8.311875" />
+			<point ath="39.409142" atv="5.743502" />
+			<point ath="39.497017" atv="5.497469" />
+			<point ath="39.905086" atv="5.368183" />
+			<point ath="39.948827" atv="5.237256" />
+		</hotspot>
+
+	</scene>
+
+	<scene name="scene_kitchenpeople_optimized_0" title="kitchenpeople_optimized_0" onstart="" thumburl="panos/kitchenpeople_optimized_0.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="auto" />
+
+		<preview url="panos/kitchenpeople_optimized_0.tiles/preview.jpg" />
+
+		<!--<image type="CUBE" multires="true" tilesize="512" progressive="false">
+			<level tiledimagewidth="6036" tiledimageheight="6036">
+				<cube url="panos/kitchenpeople_optimized_0.tiles/%s/l4/%v/l4_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="3072" tiledimageheight="3072">
+				<cube url="panos/kitchenpeople_optimized_0.tiles/%s/l3/%v/l3_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="1536" tiledimageheight="1536">
+				<cube url="panos/kitchenpeople_optimized_0.tiles/%s/l2/%v/l2_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="768" tiledimageheight="768">
+				<cube url="panos/kitchenpeople_optimized_0.tiles/%s/l1/%v/l1_%s_%v_%h.jpg" />
+			</level>
+			<mobile>
+				<cube url="panos/kitchenpeople_optimized_0.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>-->
+
+		<!-- place your scene hotspots here -->
+
+	</scene>
+
+	<scene name="scene_mainpeople_smaller" title="mainpeople_smaller" onstart="" thumburl="panos/mainpeople_smaller.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="range" vlookatmin="-84.545" vlookatmax="84.545" />
+
+		<preview url="panos/mainpeople_smaller.tiles/preview.jpg" />
+
+		<!--<image type="CUBE" multires="true" tilesize="512" progressive="false">
+			<level tiledimagewidth="6518" tiledimageheight="6518">
+				<cube url="panos/mainpeople_smaller.tiles/%s/l4/%v/l4_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="3260" tiledimageheight="3260">
+				<cube url="panos/mainpeople_smaller.tiles/%s/l3/%v/l3_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="1630" tiledimageheight="1630">
+				<cube url="panos/mainpeople_smaller.tiles/%s/l2/%v/l2_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="816" tiledimageheight="816">
+				<cube url="panos/mainpeople_smaller.tiles/%s/l1/%v/l1_%s_%v_%h.jpg" />
+			</level>
+			<mobile>
+				<cube url="panos/mainpeople_smaller.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>-->
+
+		<!-- place your scene hotspots here -->
+
+	</scene>
+
+	<scene name="scene_warroom_moody" title="warroom_moody" onstart="" thumburl="panos/warroom_moody.tiles/thumb.jpg" lat="" lng="" heading="">
+
+		<view hlookat="0" vlookat="0" fovtype="MFOV" fov="120" maxpixelzoom="2.0" fovmin="70" fovmax="140" limitview="range" vlookatmin="-85.455" vlookatmax="85.455" />
+
+		<preview url="panos/warroom_moody.tiles/preview.jpg" />
+
+		<!--<image type="CUBE" multires="true" tilesize="512" progressive="false">
+			<level tiledimagewidth="6366" tiledimageheight="6366">
+				<cube url="panos/warroom_moody.tiles/%s/l4/%v/l4_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="3184" tiledimageheight="3184">
+				<cube url="panos/warroom_moody.tiles/%s/l3/%v/l3_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="1536" tiledimageheight="1536">
+				<cube url="panos/warroom_moody.tiles/%s/l2/%v/l2_%s_%v_%h.jpg" />
+			</level>
+			<level tiledimagewidth="768" tiledimageheight="768">
+				<cube url="panos/warroom_moody.tiles/%s/l1/%v/l1_%s_%v_%h.jpg" />
+			</level>
+			<mobile>
+				<cube url="panos/warroom_moody.tiles/mobile_%s.jpg" />
+			</mobile>
+		</image>-->
+
+		<!-- place your scene hotspots here -->
+
+	</scene>
+
+
+</krpano>

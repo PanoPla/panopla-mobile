@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Bold Kitchen</title>
+	<meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, minimal-ui" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<meta http-equiv="x-ua-compatible" content="IE=edge" />
+	
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+	
+	<!-- SiDr Plugin for Side Menu -->
+	<!--<link rel="stylesheet" href="sidr-package-1.2.1/stylesheets/jquery.sidr.dark.css">
+	<script src="sidr-package-1.2.1/jquery.sidr.min.js"></script>-->
+	
+	<!-- MMENU -->
+        <script src="mmenu/src/js/jquery.mmenu.min.all.js" type="text/javascript"></script>
+        <link href="mmenu/src/css/jquery.mmenu.all.css" type="text/css" rel="stylesheet" />
+	<!--<script src="mmenu/src/js/jquery.mmenu.min.oncanvas.js" type="text/javascript"></script>
+	<link href="mmenu/src/css/extensions/jquery.mmenu.positioning.css" type="text/css" rel="stylesheet" />-->
+	
+	<!--Magnific -->
+	<!-- Magnific Popup core CSS file -->
+	<link rel="stylesheet" href="magnific-popup/magnific-popup.css"> 
+
+	<!-- jQuery 1.7.2+ or Zepto.js 1.0+ -->
+	<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>-->
+	
+	<!-- Magnific Popup core JS file -->
+	<script src="magnific-popup/jquery.magnific-popup.js"></script> 
+	
+	<style>
+		@-ms-viewport { width:device-width; }
+		@media only screen and (min-device-width:800px) { html { overflow:hidden; } }
+		html { height:100%; }
+		body { height:100%; overflow:hidden; margin:0; padding:0; font-family:Arial, Helvetica, sans-serif; font-size:16px; color:#FFFFFF; background-color:#000000; }
+	</style>
+	<script type="text/javascript">
+		var krpano;
+		var siteAdr = "http://tot.boldapps.net/?pano_id=";
+		//var panoArray = Array("scene_hairstyling4", "scene_mainpeople_smaller", "scene_warroom_moody", "scene_kitchenpeople_optimized_0");
+		var panoArray = Array("scene_hairstyling", "scene_kitchenpeople_optimized_0");
+		var panoPointer = Array("1","2");
+		var pointer = 0;
+		var defaultVar = 1;
+		
+		var magnificPopup; 
+		//Used by KRPANO. This method grabs the scene name and compares it to an array. If Found, we redirect to site address with proper id number. 
+		function launchMsg(msg)
+		{
+			//console.log(msg);
+			//alert(msg);
+			//If the scnene name matches our array then move on
+			if(findArray(msg))
+			{
+				//If scene name matches our array. Means its the same scene
+				if(msg == getSceneName())
+				{
+					$.magnificPopup.open({
+					items: {
+					    src: '<div class="white-popup msg">You are already on this level.</div>',
+					    type: 'inline',
+					    callbacks: {
+						close: function() {
+							console.log('Popup removal initiated (after removalDelay timer finished)');
+							magnificPopup.close(); 
+							}	
+						}	
+					}
+					});
+					magnificPopup = $.magnificPopup.instance; 
+				}
+				//New scene, matches our array, they can load next scene
+				else
+				{
+					window.location = siteAdr + panoPointer[pointer];
+				}
+				
+			}
+			//Scene name does not match our array. They dont have access
+			else
+			{
+				console.log("False");
+				//Default location if not specified
+				//window.location = siteAdr + defaultVar;
+				$.magnificPopup.open({
+					items: {
+					    src: '<div class="white-popup">You do not have access to this level. Click anything to close this message</div>',
+					    type: 'inline',
+					    callbacks: {
+						close: function() {
+							console.log('Popup removal initiated (after removalDelay timer finished)');
+							magnificPopup.close(); 
+						}
+				      }
+					}
+				});
+				magnificPopup = $.magnificPopup.instance; 
+			}
+			
+		}
+		
+		//Compare input string to Pano Array. Send boolean back as well assign index of pano found. 
+		function findArray(input)
+		{
+			var checker = false;
+			
+			for(var i = 0; i < panoArray.length; i++)
+			{
+				if(input == panoArray[i])
+				{
+					checker = true;
+					pointer = i;
+				}
+			}
+			console.log(checker);
+			return checker;
+		}
+		
+		//Grab the loaded Pano Scene name
+		function getSceneName()
+		{
+			return krpano.get('xml.scene');
+		}
+		
+		$(document).ready(function() {
+			$("#mission-menu").mmenu({
+			    slidingSubmenus: false
+			});
+			krpano = document.getElementById("krpanoSWFObject");
+                });
+                
+                //MMENNU
+		
+		function menuLaunch()
+		{
+			$("#mission-menu").trigger("open.mm");
+			//$('#leader-menu').slideToggle();
+		}
+		
+		var magnificPopup;
+		
+		//Launch Leader
+		function leaderLaunch()
+		{
+			$.magnificPopup.open({
+				items: {
+					src: 'http://tott.e-apprentice.ca/spotHazzards/Hazzards_serverside.html'
+					},
+				      type: 'iframe',
+				      closeOnBgClick: true,
+				      closeBtnInside: true,
+				      callbacks: {
+						close: function() {
+							console.log('Popup removal initiated (after removalDelay timer finished)');
+							magnificPopup.close(); 
+						}
+				      }
+			});
+			magnificPopup = $.magnificPopup.instance; 
+			console.log("test");
+		}
+                
+  
+	</script>
+		
+		
+</head>
+<body>
+
+<script src="tour.js"></script>
+
+<div id="pano" style="width:100%;height:100%;">
+	<noscript><table style="width:100%;height:100%;"><tr style="valign:middle;"><td><div style="text-align:center;">ERROR:<br/><br/>Javascript not activated<br/><br/></div></td></tr></table></noscript>
+	<script>
+		embedpano({swf:"tour.swf", xml:"tour.xml", target:"pano", html5:"prefer", passQueryParameters:true});
+	</script>
+</div>
+
+<!--<p>Test</p>
+<a id="simple-menu" href="#sidr">Toggle menu</a>
+ 
+<div id="sidr">
+  <ul>
+    <li><a href="#">List 1</a></li>
+    <li class="active"><a href="#">List 2</a></li>
+    <li><a href="#">List 3</a></li>
+  </ul>
+</div>-->
+
+<!-- MMENU -->
+
+
+<!-- Mission Menu-->
+<nav id="mission-menu">
+   <ul >
+    <li class="Label">Missions</li>
+    <!--<a href="#my-page">Close the menu</a>-->
+      <li><a href="">Find the Clock</a></li>
+      <li>
+         <a href="">Locate all Braids</a>
+         <ul>
+            <li><a href="">Braid 1</a></li>
+            <li><a href="">Braid 2</a></li>
+            <li><a href="">Braid 3</a></li>
+         </ul>
+      </li>
+      <li class="Spacer"><a href="">Where is Guy</a></li>
+   </ul>
+</nav>
+
+
+
+</body>
+</html>
